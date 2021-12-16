@@ -39,8 +39,11 @@
 
 
       function init() {
+
+        
+
+
         self.options = Object.assign({
-          products: productIdsWithQuantities(),
           checkoutButtonSelector: '{{ checkout_button_selector }}',
           checkoutUrl: '{{ checkout_url }}'
         }, options);
@@ -55,22 +58,27 @@
 
       function inject() {
         debug('Inject');
-        self.$checkoutButton.on('click', checkout);
+        $(document).on('click', self.options.checkoutButtonSelector, checkout);
       }
 
 
       function checkout(event) {
-        var checkoutUrl = getCheckoutURL(self.options.products);
-        debug('Checkout ->', checkoutUrl);
         event.preventDefault();
-        window.location.href = checkoutUrl;
+        event.stopPropagation();
+        var cartContents = fetch('/cart?view=meta-data.json')
+        .then(response => response.json())
+        .then(data => { 
+          var checkoutUrl = getCheckoutURL(data);
+          debug('Checkout ->', checkoutUrl);        
+          window.location.href = checkoutUrl;
+         });       
+        
       }
 
 
-      function getCheckoutURL(products) {
-        var urlLineItems = Object.keys(products).reduce(function (output, productId) {
-          var quantity = products[productId];
-          return output.concat([ productId + ':' + quantity ]);
+      function getCheckoutURL(data) {
+        var urlLineItems = Object.keys(data.meta_product_id_array).reduce(function (output, productId) {             
+          return output.concat([ data.meta_product_id_array[productId].id + ':' + data.meta_product_id_array[productId].quantity ]);
         }, []).join(';');
 
         return self.options.checkoutUrl + '?products=' + urlLineItems;
