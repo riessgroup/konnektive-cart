@@ -5,6 +5,8 @@ Override default checkout behavior and redirect to a custom URL.
 
 ## How to use?
 
+Add the `cart.meta-data.json.liquid` template to the `templates/` folder.
+
 Add the `konnective-cart.js.liquid` snippet to the `snippets/` folder and then include it at the very start of the `cart.liquid` file, passing `cart` and `checkout_url` parameters:
 
 ```html
@@ -15,12 +17,10 @@ Add the `konnective-cart.js.liquid` snippet to the `snippets/` folder and then i
 %}
 ```
 
-
 ## Options
 
 There is a reduced set of options you can use to configure the KonnektiveCart behavior:
 
-- `cart` (mandatory) the cart object.
 - `checkout_url` (mandatory) the URL where checkout will redirect the customer. Default is `'https://checkout.konnektivecrm.com'`.
 - `checkout_button_selector`: the query selector for the checkout button. Default is `'[type="submit"][name="checkout"]'`. Make sure it works for your theme.
 
@@ -29,7 +29,6 @@ For example, you could initialize the Konnektive Cart in this way:
 ```liquid
 {%
   include 'konnektive-cart.js' with
-    cart: cart
     checkout_button_selector: '[data-checkout-button]'
     checkout_url: 'https://checkout.my-site.com'
 %}
@@ -63,7 +62,6 @@ Set checkout URL to point to [CodePen](https://codepen.io/anon/pen/rPpVYm).
 ```liquid
 {%
   include 'konnektive-cart.js' with
-    cart: cart
     checkout_button_selector: '[data-checkout-button]'
     checkout_url: 'https://codepen.io/anon/pen/rPpVYm'
 %}
